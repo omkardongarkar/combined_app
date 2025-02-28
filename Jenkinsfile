@@ -45,8 +45,10 @@ pipeline {
                 script {
                     // Copy files from Module 1 to the combined repo
                     sh 'cp -r module1/* .'
+                    sh 'rm -rf module1/.git'
                     // Copy files from Module 2 to the combined repo
                     sh 'cp -r module2/* .'
+                    sh 'rm -rf module2/.git'
                 }
             }
         }
@@ -54,6 +56,10 @@ pipeline {
         stage('Commit Changes') {
             steps {
                 script {
+                    sh '''
+                       git config --global user.name "omkardongarkar"
+                       git config --global user.email "domkar2690@gmail.com"
+                    '''
                     // Add and commit changes
                     sh '''
                         git add .
@@ -67,7 +73,9 @@ pipeline {
             steps {
                 script {
                     // Push changes to the combined repository
-                    sh 'git push origin master'
+                    sh '''
+                         git push https://github.com/omkardongarkar/combined_app.git master --force
+                    '''
                 }
             }
         }
