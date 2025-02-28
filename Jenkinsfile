@@ -4,7 +4,7 @@ pipeline {
     environment {
         MODULE1_REPO_URL = 'https://github.com/omkardongarkar/module1.git'
         MODULE2_REPO_URL = 'https://github.com/omkardongarkar/module2.git'
-        COMBINED_REPO_URL = 'https://github.com/omkardongarkar/combined-repo.git'
+        COMBINED_REPO_URL = 'https://github.com/omkardongarkar/combined_app.git'
         COMBINED_REPO_DIR = 'combined-repo'
     }
 
