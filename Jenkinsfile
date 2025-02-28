@@ -1,90 +1,70 @@
 pipeline {
     agent any
-
     environment {
-        MODULE1_REPO_URL = 'https://github.com/omkardongarkar/module1.git'
-        MODULE2_REPO_URL = 'https://github.com/omkardongarkar/module2.git'
-        COMBINED_REPO_URL = 'https://github.com/omkardongarkar/combined_app.git'
-        COMBINED_REPO_DIR = 'combined-repo'
+        COMBINED_REPO = 'https://github.com/omkardongarkar/combined_app.git'  // Replace with the URL of your combined_app repo
+        MODULE1_REPO = 'https://github.com/omkardongarkar/module1.git'        // Replace with the URL of module1 repo
+        MODULE2_REPO = 'https://github.com/omkardongarkar/module2.git'        // Replace with the URL of module2 repo
     }
-
+    
     stages {
-        stage('Clone Combined Repository') {
+        stage('Clone Repositories') {
             steps {
+                // Checkout the combined_app repo (the destination repo)
+                checkout scm
+
+                // Clone module1 and module2
                 script {
-                    // Clone the combined repository
-                    git url: "${COMBINED_REPO_URL}", branch: 'master', credentialsId: 'github-credentials'
+                    sh 'git clone ${MODULE1_REPO} module1'
+                    sh 'git clone ${MODULE2_REPO} module2'
                 }
             }
         }
 
-        stage('Clone Module 1') {
+        stage('Combine Code') {
             steps {
                 script {
-                    // Clone the module 1 repository
-                    dir('module1') {
-                        git url: "${MODULE1_REPO_URL}", branch: 'master', credentialsId: 'github-credentials'
-                    }
-                }
-            }
-        }
+                    // Example logic for combining the code from both modules
+                    // You can move files, merge directories, etc.
+                    // Here, we're just copying files into the combined_app repo
 
-        stage('Clone Module 2') {
-            steps {
-                script {
-                    // Clone the module 2 repository
-                    dir('module2') {
-                        git url: "${MODULE2_REPO_URL}", branch: 'master', credentialsId: 'github-credentials'
-                    }
-                }
-            }
-        }
-
-        stage('Merge Repositories') {
-            steps {
-                script {
-                    // Copy files from Module 1 to the combined repo
+                    // Copy module1 files to the combined repo
                     sh 'cp -r module1/* .'
-                    sh 'rm -rf module1/.git'
-                    // Copy files from Module 2 to the combined repo
+
+                    // Copy module2 files to the combined repo
                     sh 'cp -r module2/* .'
-                    sh 'rm -rf module2/.git'
+                    
+                    // Example: You may want to organize them into separate directories
+                    // sh 'cp -r module1/* combined_app/module1/'
+                    // sh 'cp -r module2/* combined_app/module2/'
+
+                    // Add combined changes
+                    sh 'git add .'
+                    sh 'git commit -m "Combine code from module1 and module2"'
                 }
             }
         }
 
-        stage('Commit Changes') {
+        stage('Push to combined_app Repository') {
             steps {
                 script {
-                    sh '''
-                       git config --global user.name "omkardongarkar"
-                       git config --global user.email "domkar2690@gmail.com"
-                    '''
-                    // Add and commit changes
-                    sh '''
-                        git add .
-                        git commit -m "Merged changes from Module 1 and Module 2" || echo "No changes to commit"
-                    '''
-                }
-            }
-        }
+                    // Set user info for commit
+                    sh 'git config user.email "domkar2690@gmail.com"'
+                    sh 'git config user.name "omkardongarkar"'
 
-        stage('Push Changes') {
-            steps {
-                script {
-                    // Push changes to the combined repository
-                    sh '''
-                         git push https://github.com/omkardongarkar/combined_app.git master --force
-                    '''
+                    // Push changes to the combined_app repo
+                    sh 'git push origin main'  // Adjust to your branch name if different
                 }
             }
         }
     }
-
+    
     post {
-        always {
-            // Clean up cloned repositories
-            cleanWs()
+        failure {
+            echo 'Pipeline failed!'
+        }
+        success {
+            echo 'Pipeline succeeded!'
         }
     }
 }
+
