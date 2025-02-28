@@ -5,7 +5,7 @@ pipeline {
         REPO1 = "https://github.com/omkardongarkar/module1.git" // URL of module1 repo
         REPO2 = "https://github.com/omkardongarkar/module2.git" // URL of module2 repo
         NEW_REPO = "https://github.com/omkardongarkar/combined_app.git" // URL of the new combined repo
-        NEW_REPO_DIR = "master" // Directory to clone the new repo
+        NEW_REPO_DIR = "combined_repo" // Directory to clone the new repo
     }
 
     stages {
