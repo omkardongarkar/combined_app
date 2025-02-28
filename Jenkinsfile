@@ -14,7 +14,7 @@ pipeline {
                 script {
                     // Clone module1 and module2 repositories into the Jenkins workspace
                     def module1Clone = git url: REPO1, branch: 'master', changelog: false, poll: false
-                    def module1Clone = git url: REPO2, branch: 'master', changelog: false, poll: false
+                    def module1Clone2 = git url: REPO2, branch: 'master', changelog: false, poll: false
                 }
             }
         }
