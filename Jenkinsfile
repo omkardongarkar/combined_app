@@ -13,7 +13,7 @@ pipeline {
             steps {
                 script {
                     // Clone the combined repository
-                    git url: "${COMBINED_REPO_URL}", branch: 'master'
+                    git url: "${COMBINED_REPO_URL}", branch: 'master', credentialsId: 'github-credentials'
                 }
             }
         }
@@ -23,7 +23,7 @@ pipeline {
                 script {
                     // Clone the module 1 repository
                     dir('module1') {
-                        git url: "${MODULE1_REPO_URL}", branch: 'master'
+                        git url: "${MODULE1_REPO_URL}", branch: 'master', credentialsId: 'github-credentials'
                     }
                 }
             }
@@ -34,7 +34,7 @@ pipeline {
                 script {
                     // Clone the module 2 repository
                     dir('module2') {
-                        git url: "${MODULE2_REPO_URL}", branch: 'master'
+                        git url: "${MODULE2_REPO_URL}", branch: 'master', credentialsId: 'github-credentials'
                     }
                 }
             }
